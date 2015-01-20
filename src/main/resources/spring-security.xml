@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<beans:bean id="passwordEncoder"
+		class="org.springframework.security.crypto.password.StandardPasswordEncoder">
+		<beans:constructor-arg value="ThisIsASecretSoChangeMe" />
+	</beans:bean>
+
+	<beans:bean id="unauthorizedEntryPoint"
+		class="cn.edu.sjtu.se.dclab.server.security.UnauthorizedEntryPoint" />
+
+	<beans:bean id="userService"
+		class="cn.edu.sjtu.se.dclab.server.service.impl.UserServiceImpl" />
+
+	<beans:bean
+		class="cn.edu.sjtu.se.dclab.server.security.AuthenticationTokenProcessingFilter"
+		id="authenticationTokenProcessingFilter">
+		<beans:constructor-arg ref="userService" />
+	</beans:bean>
+
+	<authentication-manager id="authenticationManager">
+		<authentication-provider user-service-ref="userService">
+			<password-encoder ref="passwordEncoder" />
+		</authentication-provider>
+	</authentication-manager>
+
+	<http realm="Protected API" use-expressions="true" auto-config="false"
+		create-session="stateless" entry-point-ref="unauthorizedEntryPoint"
+		authentication-manager-ref="authenticationManager">
+
+		<intercept-url pattern="/rest/login" access="permitAll" />
+		
+		<intercept-url pattern="/rest/**" access="hasRole('user')" />
+
+		<custom-filter ref="authenticationTokenProcessingFilter"
+			position="FORM_LOGIN_FILTER" />
+	</http>
+
+</beans:beans>
