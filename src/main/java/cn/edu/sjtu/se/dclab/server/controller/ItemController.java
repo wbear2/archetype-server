@@ -3,6 +3,7 @@ package cn.edu.sjtu.se.dclab.server.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,8 @@ import cn.edu.sjtu.se.dclab.server.service.ItemService;
 @RequestMapping("/item/")
 public class ItemController {
 
+	private Logger logger = Logger.getLogger(ItemController.class);
+
 	@Autowired
 	private ItemService itemService;
 
@@ -37,6 +40,8 @@ public class ItemController {
 	@ResponseBody
 	public String createItem(HttpServletRequest request,
 			HttpServletResponse response) {
+		logger.info("test...log");
+		logger.error("error...log");
 		return "index";
 	}
 

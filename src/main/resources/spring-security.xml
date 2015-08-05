@@ -33,7 +33,7 @@
 
 		<intercept-url pattern="/rest/login" access="permitAll" />
 		
-		<intercept-url pattern="/rest/**" access="hasRole('user')" />
+		<intercept-url pattern="/rest/**" access="permitAll" />
 
 		<custom-filter ref="authenticationTokenProcessingFilter"
 			position="FORM_LOGIN_FILTER" />
